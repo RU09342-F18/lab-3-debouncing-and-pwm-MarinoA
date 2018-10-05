@@ -4,7 +4,7 @@
 int main(void)
 {
     WDTCTL = WDTPW + WDTHOLD; //Disable the Watchdog timer
-    PM5CTL0 &= ~LOCKLPM5;
+    PM5CTL0 &= ~LOCKLPM5; //unlock GPIO pins 
     P2DIR |= BIT0; //Set pin RED LED to OUT
     P1DIR |= BIT0; //sets green LED to out for debug
 
@@ -23,37 +23,37 @@ int main(void)
     while(1);
 }
 
-#pragma vector =PORT1_VECTOR
+#pragma vector =PORT1_VECTOR //button interrupt 
 __interrupt void PORT1(void)
 {
-    if (P1IES & BIT1)
+    if (P1IES & BIT1) //if falling edge detected 
     {
-    P1OUT |= BIT0;
-    P1IES &= ~BIT1;
+    P1OUT |= BIT0; //turn on LED
+    P1IES &= ~BIT1; //change to falling edge detect 
     }
-    else
+    else //if falling edge 
     {
-    P1OUT &= ~BIT0;
-    P1IES |= BIT1;
+    P1OUT &= ~BIT0; //turn off LED
+    P1IES |= BIT1; //change to rising edge detect 
     }
 
-    if(TB0CCR1 < 255 && TB0CCR1 >= 0)
+    if(TB0CCR1 < 255 && TB0CCR1 >= 0) //if CCR1 is between 0 and 255
     {
-    TB0CCR1 +=25;
+    TB0CCR1 +=25; //increase duty cycle by 10%
     }
-    else
+    else //if duty cycle is 100%
     {
-        TB0CCR1 = 0;
+        TB0CCR1 = 0; //reset duty cycle 
     }
-    P1IFG &= ~BIT1;
+    P1IFG &= ~BIT1; //clear button interrupt flag 
 }
 
-#pragma vector = TIMER0_B1_VECTOR
+#pragma vector = TIMER0_B1_VECTOR //timer interrupt vector 
 __interrupt void TIMER1 (void)
 {
     switch(TB0IV)
       {
-        case  2:  P2OUT &= ~BIT0;  break;        // CCR1 for variable value
+        case  2:  P2OUT &= ~BIT0;  break;        // CCR1 for duty cycle 
         case  4:  break;                        // CCR2 not used
         case 0x0E:  P2OUT |= BIT0;                // overflow for period
                   break;
