@@ -1,4 +1,4 @@
-Button Debounce y by Alex Marino
+Button Debounce by Alex Marino
 Embedded Systems Section 3
 Due by October 5, 2018
 Created October 3, 2018
