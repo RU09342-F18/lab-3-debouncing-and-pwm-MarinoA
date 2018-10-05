@@ -4,7 +4,7 @@
 
 int main(void)
 {
-	WDTCTL = WDTPW | WDTHOLD;	                // stop watchdog timer
+    WDTCTL = WDTPW | WDTHOLD;	                // stop watchdog timer
     BCSCTL3 = LFXT1S_2;                        //tells MC to use internal crystal
     P1DIR |= BIT0;                          //set P1.0 as out
     P1DIR &= ~BIT3;                        //set P1.3 as in
