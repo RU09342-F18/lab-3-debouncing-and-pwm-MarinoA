@@ -25,34 +25,34 @@ int main(void)
 #pragma vector =PORT1_VECTOR
 __interrupt void PORT1(void)
 {
-    if (P1IES & BIT3)
+    if (P1IES & BIT3) //if falling edge detected 
     {
-    P1OUT |= BIT0;
-    P1IES &= ~BIT3;
+    P1OUT |= BIT0; //turn on LED
+    P1IES &= ~BIT3; //change to falling edge detect 
     }
-    else
+    else //if falling edge detected 
     {
-    P1OUT &= ~BIT0;
-    P1IES |= BIT3;
+    P1OUT &= ~BIT0; //turn off LED
+    P1IES |= BIT3; //change to rising edge detect 
     }
 
-    if(TA0CCR1 < 255 && TA0CCR1 >= 0)
+    if(TA0CCR1 < 255 && TA0CCR1 >= 0) //if CCR1 is between 0 and 255
     {
-    TA0CCR1 +=25;
+    TA0CCR1 +=25; //increase duty cycle by 10%
     }
-    else
+    else //if duty cycle is 100%
     {
-        TA0CCR1 = 0;
+        TA0CCR1 = 0; //reset duty cycle 
     }
-    P1IFG &= ~BIT3;
+    P1IFG &= ~BIT3; //clear button interrupt flag 
 }
 
-#pragma vector = TIMER0_A1_VECTOR
+#pragma vector = TIMER0_A1_VECTOR //timer interrupt vector 
 __interrupt void TIMER1 (void)
 {
-    switch(TA0IV)
+    switch(TA0IV) //switch case for timer0 A interrupt vector 
       {
-        case  2:  P1OUT &= ~BIT6;  break;        // CCR1 for variable value
+        case  2:  P1OUT &= ~BIT6;  break;        // CCR1 for duty cycle
         case  4:  break;                        // CCR2 not used
         case 10:  P1OUT |= BIT6;                // overflow for period
                   break;
